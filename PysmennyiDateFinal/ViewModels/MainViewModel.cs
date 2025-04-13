@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using PysmennyiDateFinal.Services;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using System.Windows.Data;
 
 namespace PysmennyiDateFinal.ViewModels
 {
@@ -31,6 +32,33 @@ namespace PysmennyiDateFinal.ViewModels
             {
                 _people = value;
                 OnPropertyChanged(nameof(People));
+                PeopleView = CollectionViewSource.GetDefaultView(_people);
+                PeopleView.Filter = FilterPeople;
+            }
+        }
+
+        private string _surnameFilter = string.Empty;
+        public string SurnameFilter
+        {
+            get { return _surnameFilter; }
+            set
+            {
+                _surnameFilter = value;
+                OnPropertyChanged(nameof(SurnameFilter));
+                PeopleView.Refresh();
+            }
+        }
+
+        
+
+        private ICollectionView? _peopleView;
+        public ICollectionView PeopleView
+        {
+            get => _peopleView!;
+            private set
+            {
+                _peopleView = value;
+                OnPropertyChanged(nameof(PeopleView));
             }
         }
 
@@ -47,6 +75,20 @@ namespace PysmennyiDateFinal.ViewModels
             SaveJsonCommand = new RelayCommand(SaveJson);
         }
 
+        private bool FilterPeople(object obj)
+        {
+            if (obj is Person person)
+            {
+
+                if (string.IsNullOrEmpty(SurnameFilter))
+                    return true;
+
+                return person.Surname.Contains(SurnameFilter, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+
+
         public void AddPerson(Person person)
         {
             People.Add(person);
@@ -55,6 +97,7 @@ namespace PysmennyiDateFinal.ViewModels
 
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
 
         private void LoadJson()
         {
@@ -81,6 +124,8 @@ namespace PysmennyiDateFinal.ViewModels
                 {
                     People.Add(person);
                 }
+                PeopleView = CollectionViewSource.GetDefaultView(_people);
+                PeopleView.Filter = FilterPeople;
             }
             catch (Exception ex)
             {
