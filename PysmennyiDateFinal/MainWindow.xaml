@@ -5,8 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PysmennyiDateFinal"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="450" Width="1080">
+    <Grid  Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid Grid.Row="0" ItemsSource="{Binding People}"
+                  AutoGenerateColumns="False"
+                  CanUserDeleteRows="True"
+                  IsReadOnly="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"
+                            Binding="{Binding Name}"
+                            IsReadOnly="False" />
 
+                <DataGridTextColumn Header="Surname"
+                            Binding="{Binding Surname}"
+                            IsReadOnly="False" />
+
+                <DataGridTextColumn Header="Email"
+                            Binding="{Binding Email}"
+                            IsReadOnly="False" />
+
+                <DataGridTextColumn Header="Birth Date"
+                            Binding="{Binding BirthDate, StringFormat=\{0:yyyy-MM-dd\}}"
+                            IsReadOnly="False" />
+
+                <DataGridTextColumn Header="Has Birthday Today"
+                    Binding="{Binding IsBirthday}"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Is Adult"
+                    Binding="{Binding IsAdult}"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Western Sign"
+                    Binding="{Binding SunSign}"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn Header="Chinese Sign"
+                    Binding="{Binding ChineseSign}"
+                    IsReadOnly="True" />        
+
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="1" Content="Add Person" Command="{Binding CreatePersonCommand}" Margin="0,20,0,0"/>
+        <Button Grid.Row="2" Content="Sync Table" Command="{Binding SaveJsonCommand}" Margin="0,20,0,0"/>
     </Grid>
 </Window>
